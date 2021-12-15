@@ -147,13 +147,8 @@ body{
     private Thread _serverThread;
     private string _rootDirectory;
     private HttpListener _listener;
-    private int _port;
 
-    public int Port
-    {
-        get { return _port; }
-        private set { }
-    }
+    public int Port { get; private set; }
 
     /// <summary>
     /// Construct server with given port, path ,controller and buffer.
@@ -192,7 +187,7 @@ body{
     private void Listen()
     {
         _listener = new HttpListener();
-        _listener.Prefixes.Add("http://*:" + _port.ToString() + "/");
+        _listener.Prefixes.Add("http://*:" + Port + "/");
         _listener.Start();
         while (true)
         {
@@ -307,7 +302,7 @@ body{
             resultStream.Close();
 
         }
-    WebResponse:
+        WebResponse:
         context.Response.OutputStream.Flush();
         context.Response.OutputStream.Close();
 
@@ -344,7 +339,7 @@ body{
     private void Initialize(string path, int port)
     {
         this._rootDirectory = path;
-        this._port = port;
+        this.Port = port;
         _serverThread = new Thread(this.Listen);
         _serverThread.Start();
     }

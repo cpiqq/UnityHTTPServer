@@ -11,7 +11,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.Reflection;
 
-
+// https://github.com/cpiqq/UnityHTTPServer
 public class UnityHTTPServer : MonoBehaviour
 {
     [SerializeField]
@@ -32,24 +32,15 @@ public class UnityHTTPServer : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         if (myServer == null)
         {
-            Init();
+            StartServer();
         }
     }
-    void Init()
-    {
-        StartServer();
-    }
-
     public void StartServer()
     {
         myServer = new SimpleHTTPServer(GetSaveFolderPath, port, controller, bufferSize);
         myServer.OnJsonSerialized += (result) =>
         {
-#if UseLitJson
             return LitJson.JsonMapper.ToJson(result);
-#else
-            return JsonUtility.ToJson(result);
-#endif
         };
     }
     string GetSaveFolderPath
@@ -92,6 +83,7 @@ public class UnityHTTPServer : MonoBehaviour
     void OnApplicationQuit()
     {
         myServer.Stop();
+        myServer = null;
     }
 
 }
